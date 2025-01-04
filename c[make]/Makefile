@@ -1,10 +1,10 @@
 
 
-hello: hello.o
-	gcc -o hello hello.o
+main: main.o
+	gcc -o main main.o
 
-hello.o:
-	gcc -c hello.c
+main.o:
+	gcc -c main.c
 
 clean:
-	rm hello.o hello
+	rm main.o main

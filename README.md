@@ -1,6 +1,6 @@
 # **V**im **D**evelopment **E**nvironment (VDE)
 
-I use `vim-plug` for my stuff. Bellow are some new keybinds
+I use `vim-plug` for my stuff. Below are some new keybinds
 
 ## Split Navigation
 `;` = go to previous split

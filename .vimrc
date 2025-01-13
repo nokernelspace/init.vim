@@ -1,5 +1,5 @@
 call plug#begin()
-
+Plug 'puremourning/vimspector'
 " Superdupersmartautocomplete (NOT intellisence since that's a Microsoft trademark)
 Plug 'ycm-core/YouCompleteMe'
 
@@ -33,7 +33,7 @@ Plug 'mxw/vim-jsx'
 Plug 'mg979/vim-visual-multi'
 
 " Running and Debugging
-Plug 'puremourning/vimspector'
+" Plug 'puremourning/vimspector'
 Plug 'mklabs/vim-cowsay'
 
 " Session Managemnet
@@ -44,6 +44,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 Plug 'mhinz/vim-startify'
+Plug 'voldikss/vim-floaterm'
+Plug 'xolox/vim-misc'
 
 call plug#end()
 
@@ -94,7 +96,7 @@ nnoremap <C-s> :GFiles?<CR> :echo 'Changes since last commit...'
 "nnoremap o :OutlineGoToOutline<CR>
 " Code Navigation
 nnoremap <F11> :TagbarToggle<CR>
-nnoremap <F12> :TagbarOpen f<CR>
+nnoremap <F12> :TagbarOpenAutoClose<CR>
 
 "nnoremap <F11> :OutlineRefresh<CR>
 "
@@ -145,4 +147,23 @@ nnoremap <Right> 20l
 "nnoremap <C-d> <Left> :call vimspector#StepOut()<CR>
 
 colorscheme happy_hacking
+
+" Advanced features
+nnoremap <C-Bslash> :FloatermToggle<CR>
+nnoremap <C-,> :YcmDiags<CR>
+
+nnoremap <C-T> :term meson test<CR>
+nnoremap <C-B> :term ++shell meson compile -C builddir && ./builddir/game<CR>
+nnoremap <Space>r :call vimspector#Launch()<CR>
+nnoremap <Space>d :call vimspector#ToggleBreakpoint()<CR>
+nnoremap <Space>q :q<CR>
+nnoremap <Space>w :wq<CR>
+let g:workspace_autocreate = 1
+let g:workspace_session_name = 'Session.vim'
+let g:ycm_max_diagnostics_to_display=0
+
+" nnoremap <C-P> :term meson compile --preprocess -C builddir<CR>
+
+" let g:vimspector_enable_mappings='HUMAN'
+" let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
 

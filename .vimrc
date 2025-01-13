@@ -1,12 +1,13 @@
 call plug#begin()
 Plug 'puremourning/vimspector'
 " Superdupersmartautocomplete (NOT intellisence since that's a Microsoft trademark)
-Plug 'ycm-core/YouCompleteMe'
+""  Plug 'ycm-core/YouCompleteMe'
 
 " File Navigation
 Plug 'preservim/nerdtree'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'dense-analysis/ale'
 
 "Plug 'jistr/vim-nerdtree-tabs'
 
@@ -160,10 +161,14 @@ nnoremap <Space>q :q<CR>
 nnoremap <Space>w :wq<CR>
 let g:workspace_autocreate = 1
 let g:workspace_session_name = 'Session.vim'
-let g:ycm_max_diagnostics_to_display=0
+" let g:ycm_max_diagnostics_to_display=0
 
 " nnoremap <C-P> :term meson compile --preprocess -C builddir<CR>
 
 " let g:vimspector_enable_mappings='HUMAN'
 " let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
 
+let g:ale_fix_on_save = 1
+let b:ale_linters = ['rustc', 'rls']
+let g:ale_sign_warning = '⚠️ '
+let g:ale_sign_error = '🛑'

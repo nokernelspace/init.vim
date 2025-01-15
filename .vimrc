@@ -2,6 +2,7 @@ call plug#begin()
 Plug 'puremourning/vimspector'
 " Superdupersmartautocomplete (NOT intellisence since that's a Microsoft trademark)
 ""  Plug 'ycm-core/YouCompleteMe'
+Plug 'urbainvaes/vim-tmux-pilot'
 
 " File Navigation
 Plug 'preservim/nerdtree'
@@ -47,6 +48,8 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'mhinz/vim-startify'
 Plug 'voldikss/vim-floaterm'
 Plug 'xolox/vim-misc'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+Plug 'aserebryakov/vim-todo-lists'
 
 call plug#end()
 
@@ -68,21 +71,13 @@ nnoremap ; :wincmd p<CR>
 nnoremap <F1> :NERDTreeFind<CR>
 nnoremap <F2> :NERDTreeToggle<CR>
 
-nnoremap <C-w><C-h> :History<CR> 
-":echo 'Searching VIM History...'
-nnoremap <C-w><C-j> :Lines<CR> 
-":echo 'Searching All Open File...'
-nnoremap <C-w><C-k> :BLines<CR> 
-":echo 'Searching File...'
-nnoremap <C-w><C-l> :Files<CR> 
-":echo 'Searching Tags...'
-nnoremap <C-f> :Files<CR> 
-":echo 'Searching Project Directory...'
+nnoremap <C-f> :Lines<CR>
+nnoremap <C-g> :Files<CR>
 
 " Time Navigation
 " <C-o> prev jump
 " <C-i> post jump
-nnoremap <C-s> :GFiles?<CR> :echo 'Changes since last commit...'
+" nnoremap <C-s> :GFiles?<CR> :echo 'Changes since last commit...'
 
 "nnoremap n :NERDTreeTabsFocus<CR>
 "nnoremap <F1> :NERDTreeTabsFind<CR>
@@ -104,10 +99,10 @@ nnoremap <F12> :TagbarOpenAutoClose<CR>
 
 
 " File navigation
-nnoremap <C-k> 5k
-nnoremap <C-j> 5j
-nnoremap <C-h> 5h
-nnoremap <C-l> 5l
+" nnoremap <C-k> 5k
+" nnoremap <C-j> 5j
+" nnoremap <C-h> 5h
+" nnoremap <C-l> 5l
 
 " Not in OSX
 "nnoremap <ALT-k> 10k
@@ -135,9 +130,15 @@ nnoremap <Right> 20l
 
 " Debugger mappings
 "nnoremap <F7> :call vimspector#RunToCursor()<CR>
-"nnoremap <F8> <Plug>VimspectorBalloonEval 
-"nnoremap <F9> :call vimspector#ToggleBreakpoint()<CR>
-"nnoremap <F10> :call vimspector#ToggleAdvancedBreakpoint()<CR>
+"nnoremap <F8> <Plug>VimspectorBalloonEval
+nnoremap <Space>b :call vimspector#ToggleBreakpoint()<CR>
+nnoremap <Space>ab :call vimspector#ToggleAdvancedBreakpoint()<CR>
+
+
+nnoremap <Space>h :call vimspector#StepOut()<CR>
+nnoremap <Space>j :call vimspector#StepOver()<CR>
+nnoremap <Space>k :call vimspector#ClearBreakpoints()<CR>
+nnoremap <Space>l :call vimspector#Continue()<CR>
 
 "nnoremap <C-0> :call vimspector#JumpToProgramCounter()<CR>
 "nnoremap <C-9> :call vimspector#GoToCurrentLine()<CR>
@@ -151,17 +152,74 @@ colorscheme happy_hacking
 
 " Advanced features
 nnoremap <C-Bslash> :FloatermToggle<CR>
-nnoremap <C-,> :YcmDiags<CR>
 
 nnoremap <C-T> :term meson test<CR>
 nnoremap <C-B> :term ++shell meson compile -C builddir && ./builddir/game<CR>
 nnoremap <Space>r :call vimspector#Launch()<CR>
+nnoremap <Space>y :call vimspector#Restart()<CR>
 nnoremap <Space>d :call vimspector#ToggleBreakpoint()<CR>
 nnoremap <Space>q :q<CR>
+nnoremap <Space>e :q!<CR>
 nnoremap <Space>w :wq<CR>
+nnoremap <Space>t :VimTodoListsToggleItem<CR>
+
+
+function! ListKeybinds()
+    echo "<C-f>           = Search Buffer"
+    echo "<C-g>           = Search Files"
+    echo "<C-o>           = Go to Previous Jump"
+    echo "<;>             = Go to Previous Split"
+
+    echo "<C-k>           = Move 5 Up"
+    echo "<C-j>           = Move 5 Down"
+    echo "<C-h>           = Move 5 Left"
+    echo "<C-l>           = Move 5 Right"
+
+    echo "<Up>            = Move 20 Up"
+    echo "<Down>          = Move 20 Down"
+    echo "<Left>          = Move 20 Left"
+    echo "<Right>>        = Move 20 Right"
+
+    echo "<F1> 		= Focus Filesystem Tree"
+    echo "<F2> 		= Toggle Filesystem Tree"
+
+    echo "<F11> 	        = Toggle File Outline"
+    echo "<F12> 	        = Focus File Outline"
+    echo "<Space>d 	= Toggle Breakpoint"
+    echo "<Space>b 	= Toggle Breakpoint"
+    echo "<Space>ab 	= Toggle Conditional Breakpoint"
+
+    echo "<Space>r 	= Begin Launch"
+    echo "<Space>d 	= Toggle Breakpoint"
+    echo "<Space>b 	= Toggle Breakpoint"
+    echo "<Space>ab 	= Toggle Conditional Breakpoint"
+
+
+    echo "<Space>h 	= Debugger Step Out"
+    echo "<Space>j 	= Debugger Step Over"
+    echo "<Space>k 	= Clear All Breakpoints"
+    echo "<Space>l 	= Debugger Continue"
+
+    echo "<Space>q 	= Quit"
+    echo "<Space>e 	= Force Quit"
+    echo "<Space>w 	= Write & Quit"
+
+    echo "<Space>w 	= Write & Quit"
+
+
+    echo "<Space><CR> 	= Toggle TODO item"
+    echo "<Space>t        = Toggle TODO item"
+
+
+    echo "<C-\\>       	= Toggle Floating Terminal"
+    echo "<C-w>N       	= Enter Normal Mode in Terminal Mode"
+endfunction
+
+
+command! Keys :call ListKeybinds()
+
 let g:workspace_autocreate = 1
 let g:workspace_session_name = 'Session.vim'
-" let g:ycm_max_diagnostics_to_display=0
 
 " nnoremap <C-P> :term meson compile --preprocess -C builddir<CR>
 
@@ -169,6 +227,28 @@ let g:workspace_session_name = 'Session.vim'
 " let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
 
 let g:ale_fix_on_save = 1
-let b:ale_linters = ['rustc', 'rls']
+" let g:ale_linters = ['rustc', 'rls']
+
+"			\	'rust': ['rustfmt']
+"let g:ale_fixers = {
+"	\   '*': ['remove_trailing_lines', 'trim_whitespace']
+"			\}
 let g:ale_sign_warning = '⚠️ '
 let g:ale_sign_error = '🛑'
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+
+
+" Uncomment to enable navigation of vim tabs
+let g:pilot_mode='winonly'
+
+" Uncomment to enable creation of vim splits automatically
+let g:pilot_boundary='create'
+
+" Uncomment to use the modifier `Alt` instead of `Control`
+" let g:pilot_key_h='<a-h>'
+" " let g:pilot_key_j='<a-j>'
+" " let g:pilot_key_k='<a-k>'
+" " let g:pilot_key_l='<a-l>'
+" " let g:pilot_key_p='<a-\>'
+"

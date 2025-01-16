@@ -1,26 +1,28 @@
 call plug#begin()
-Plug 'puremourning/vimspector'
+Plug 'kien/rainbow_parentheses.vim'         " Highlight () [] {}
+Plug 'puremourning/vimspector'              " Run Manager
 " Superdupersmartautocomplete (NOT intellisence since that's a Microsoft trademark)
-""  Plug 'ycm-core/YouCompleteMe'
-Plug 'urbainvaes/vim-tmux-pilot'
+" Plug 'ycm-core/YouCompleteMe'               " Microsoft Style Intellicense
+Plug 'dense-analysis/ale'                   " Code Checking
+Plug 'urbainvaes/vim-tmux-pilot'            " Tmux Integration
 
 " File Navigation
 Plug 'preservim/nerdtree'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " File and Buffer Searching
 Plug 'junegunn/fzf.vim'
-Plug 'dense-analysis/ale'
-
-"Plug 'jistr/vim-nerdtree-tabs'
+Plug 'sstallion/vim-cursorline'             " Sublime-Style Multicursor support (Doesn't work with tmux)
+Plug 'myusuf3/numbers.vim'              " Switch between relative & absolute line #s when switching splits
 
 " Code Navigation
-Plug 'ubaldot/vim-outline'
-Plug 'preservim/tagbar'	"Requires universal-ctags for multi-language support
+Plug 'ubaldot/vim-outline'              " purdy ctags
+Plug 'preservim/tagbar'                 "Requires universal-ctags for multi-language supportPlug 'junegunn/goyo.vim'
 
 " Syntax highlighting
 Plug 'bfrg/vim-c-cpp-modern'
 
 " More colors
 Plug 'rafi/awesome-vim-colorschemes'
+Plug 'pineapplegiant/spaceduck'
 
 " C/C++
 " Better Automatic Folding
@@ -32,26 +34,34 @@ Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 
 " Sublime-text-Style Multi-cursors
-Plug 'mg979/vim-visual-multi'
 
 " Running and Debugging
 " Plug 'puremourning/vimspector'
-Plug 'mklabs/vim-cowsay'
+" Plug 'mklabs/vim-cowsay'
 
 " Session Managemnet
-Plug 'xolox/vim-session'
+Plug 'xolox/vim-session'                " Workspace Manager
 
 " Cool UI/UX
-Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline'              " UI/UX
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'mhinz/vim-startify'
-Plug 'voldikss/vim-floaterm'
+Plug 'mhinz/vim-startify'               " Splash Screen
+Plug 'voldikss/vim-floaterm'                " Popup terminal in the center
 Plug 'xolox/vim-misc'
-Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-Plug 'aserebryakov/vim-todo-lists'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'} " Clones insertions across lines in visual mode
+Plug 'aserebryakov/vim-todo-lists'          " Add .todo.md files
+
+Plug 'junegunn/goyo.vim'                " Zen Mode
+
+Plug 'camspiers/animate.vim'
+Plug 'camspiers/lens.vim'           " Automatic Window Animation
+
 
 call plug#end()
+let g:lens#disabled = 0
+let g:lens#animate = 1
+
 
 set foldcolumn=1
 set foldmethod=syntax
@@ -64,6 +74,9 @@ set signcolumn=yes
 
 
 """ Keybinds
+nnoremap <Space><CR> :source ~/.vimrc<CR>:echo 'Refreshed ~/.vimrc ✨✨✨ ԅ(≖‿≖ԅ)'<CR>
+nnoremap <Space>1 :RainbowParenthesesToggleAll<CR>
+nnoremap <Space>0 :Goyo<CR>
 nnoremap ; :wincmd p<CR>
 
 "nnoremap n :NERDTreeFocus<CR>
@@ -110,10 +123,16 @@ nnoremap <F12> :TagbarOpenAutoClose<CR>
 "nnoremap <ALT-h> 10h
 "nnoremap <ALT-l> 10l
 
-nnoremap <Up> 20k
-nnoremap <Down> 20j
-nnoremap <Left> 20h
-nnoremap <Right> 20l
+"nnoremap <Up> 20k
+"nnoremap <Down> 20j
+"nnoremap <Left> 20h
+"nnoremap <Right> 20l
+
+nnoremap <silent> <Up>    :call animate#window_delta_height(10)<CR>
+nnoremap <silent> <Down>  :call animate#window_delta_height(-10)<CR>
+nnoremap <silent> <Left>  :call animate#window_delta_width(10)<CR>
+nnoremap <silent> <Right> :call animate#window_delta_width(-10)<CR>
+
 
 " Not in OSX
 "nnoremap <ALT-Up> 40k
@@ -148,13 +167,15 @@ nnoremap <Space>l :call vimspector#Continue()<CR>
 "nnoremap <C-d> <Right> :call vimspector#Continue()<CR>
 "nnoremap <C-d> <Left> :call vimspector#StepOut()<CR>
 
-colorscheme happy_hacking
+"colorscheme happy_hacking
+colorscheme spaceduck
 
 " Advanced features
 nnoremap <C-Bslash> :FloatermToggle<CR>
 
 nnoremap <C-T> :term meson test<CR>
 nnoremap <C-B> :term ++shell meson compile -C builddir && ./builddir/game<CR>
+nnoremap <C-s> :w<CR>:echo "Saved"<CR>
 nnoremap <Space>r :call vimspector#Launch()<CR>
 nnoremap <Space>y :call vimspector#Restart()<CR>
 nnoremap <Space>d :call vimspector#ToggleBreakpoint()<CR>
@@ -165,54 +186,57 @@ nnoremap <Space>t :VimTodoListsToggleItem<CR>
 
 
 function! ListKeybinds()
+    echo "<Space>1           = Toggle Bracket Highlighting"
+    echo "<Space>0           = Toggle Zen Mode"
     echo "<C-f>           = Search Buffer"
     echo "<C-g>           = Search Files"
     echo "<C-o>           = Go to Previous Jump"
     echo "<;>             = Go to Previous Split"
 
-    echo "<C-k>           = Move 5 Up"
-    echo "<C-j>           = Move 5 Down"
-    echo "<C-h>           = Move 5 Left"
-    echo "<C-l>           = Move 5 Right"
+    echo "<C-k>           = Move Up Tmux"
+    echo "<C-j>           = Move Down Tmux"
+    echo "<C-h>           = Move Left Tmux"
+    echo "<C-l>           = Move Right Tmux"
 
     echo "<Up>            = Move 20 Up"
     echo "<Down>          = Move 20 Down"
     echo "<Left>          = Move 20 Left"
     echo "<Right>>        = Move 20 Right"
 
-    echo "<F1> 		= Focus Filesystem Tree"
-    echo "<F2> 		= Toggle Filesystem Tree"
+    echo "<F1>      = Focus Filesystem Tree"
+    echo "<F2>      = Toggle Filesystem Tree"
+    echo "<Space><CR>   = Reload ~/.vimrc"
 
-    echo "<F11> 	        = Toggle File Outline"
-    echo "<F12> 	        = Focus File Outline"
-    echo "<Space>d 	= Toggle Breakpoint"
-    echo "<Space>b 	= Toggle Breakpoint"
-    echo "<Space>ab 	= Toggle Conditional Breakpoint"
+    echo "<F11>             = Toggle File Outline"
+    echo "<F12>             = Focus File Outline"
+    echo "<Space>d  = Toggle Breakpoint"
+    echo "<Space>b  = Toggle Breakpoint"
+    echo "<Space>ab     = Toggle Conditional Breakpoint"
 
-    echo "<Space>r 	= Begin Launch"
-    echo "<Space>d 	= Toggle Breakpoint"
-    echo "<Space>b 	= Toggle Breakpoint"
-    echo "<Space>ab 	= Toggle Conditional Breakpoint"
-
-
-    echo "<Space>h 	= Debugger Step Out"
-    echo "<Space>j 	= Debugger Step Over"
-    echo "<Space>k 	= Clear All Breakpoints"
-    echo "<Space>l 	= Debugger Continue"
-
-    echo "<Space>q 	= Quit"
-    echo "<Space>e 	= Force Quit"
-    echo "<Space>w 	= Write & Quit"
-
-    echo "<Space>w 	= Write & Quit"
+    echo "<Space>r  = Begin Launch"
+    echo "<Space>d  = Toggle Breakpoint"
+    echo "<Space>b  = Toggle Breakpoint"
+    echo "<Space>ab     = Toggle Conditional Breakpoint"
 
 
-    echo "<Space><CR> 	= Toggle TODO item"
+    echo "<Space>h  = Debugger Step Out"
+    echo "<Space>j  = Debugger Step Over"
+    echo "<Space>k  = Clear All Breakpoints"
+    echo "<Space>l  = Debugger Continue"
+
+    echo "<Space>q  = Quit"
+    echo "<Space>e  = Force Quit"
+    echo "<Space>w  = Write & Quit"
+
+    echo "<Space>w  = Write & Quit"
+
+
+    echo "<Space><CR>   = Toggle TODO item"
     echo "<Space>t        = Toggle TODO item"
 
 
-    echo "<C-\\>       	= Toggle Floating Terminal"
-    echo "<C-w>N       	= Enter Normal Mode in Terminal Mode"
+    echo "<C-\\>        = Toggle Floating Terminal"
+    echo "<C-w>N        = Enter Normal Mode in Terminal Mode"
 endfunction
 
 
@@ -227,16 +251,17 @@ let g:workspace_session_name = 'Session.vim'
 " let g:vimspector_install_gadgets = [ 'debugpy', 'vscode-cpptools', 'CodeLLDB' ]
 
 let g:ale_fix_on_save = 1
-" let g:ale_linters = ['rustc', 'rls']
-
-"			\	'rust': ['rustfmt']
-"let g:ale_fixers = {
-"	\   '*': ['remove_trailing_lines', 'trim_whitespace']
-"			\}
+"let g:ale_linters = ['rustc', 'rls']
+let g:ale_fixers = {
+   \   '*': ['remove_trailing_lines', 'trim_whitespace']
+           \}
 let g:ale_sign_warning = '⚠️ '
 let g:ale_sign_error = '🛑'
-let g:ale_set_loclist = 0
+"let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 1
+"let g:ale_completion_enabled = 1
+"set omnifunc=ale#completion#OmniFunc
+"set completeopt=menuone,noselect
 
 
 " Uncomment to enable navigation of vim tabs
@@ -252,3 +277,18 @@ let g:pilot_boundary='create'
 " " let g:pilot_key_l='<a-l>'
 " " let g:pilot_key_p='<a-\>'
 "
+"
+set expandtab
+set tabstop=4
+
+function! OnWrite()
+        YcmDiags
+        retab
+endfunction
+
+"autocmd BufWritePost * :YcmDiags
+"
+let g:lens#disabled_filetypes = ['nerdtree', 'fzf', 'tagbar']
+
+set cursorline
+highlight CursorLine ctermbg=241
